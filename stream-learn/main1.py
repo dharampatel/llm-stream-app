@@ -25,6 +25,20 @@ chain = prompt | llm
 
 # Stream response as generator
 @app.post("/chat")
+async def chat(payload: QuestionRequest):
+    prompt = ChatPromptTemplate.from_messages([("human", "{question}")])
+    chain = prompt | llm
+
+    # Generator to yield chunks
+    async def generate():
+        async for chunk in chain.astream({"question": payload.question}):
+            yield chunk.content  # only the text content
+
+    return StreamingResponse(generate(), media_type="text/plain")
+
+
+#sync implementation
+@app.post("/chat1")
 def chat(payload: QuestionRequest):
     prompt = ChatPromptTemplate.from_messages([("human", "{question}")])
     chain = prompt | llm
