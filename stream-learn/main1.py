@@ -23,7 +23,7 @@ prompt = ChatPromptTemplate.from_messages([
 ])
 chain = prompt | llm
 
-# Stream response as generator
+#async stream implementation
 @app.post("/chat")
 async def chat(payload: QuestionRequest):
     prompt = ChatPromptTemplate.from_messages([("human", "{question}")])
@@ -37,7 +37,7 @@ async def chat(payload: QuestionRequest):
     return StreamingResponse(generate(), media_type="text/plain")
 
 
-#sync implementation
+#sync stream implementation
 @app.post("/chat1")
 def chat(payload: QuestionRequest):
     prompt = ChatPromptTemplate.from_messages([("human", "{question}")])
