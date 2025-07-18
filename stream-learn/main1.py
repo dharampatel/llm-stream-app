@@ -33,8 +33,8 @@ async def chat(payload: QuestionRequest):
     async def generate():
         async for chunk in chain.astream({"question": payload.question}):
             yield chunk.content  # only the text content
-
-    return StreamingResponse(generate(), media_type="text/plain")
+    # we can use either 'text/plain' or 'text/event-stream', but for streaming 'text/event-stream' recommended
+    return StreamingResponse(generate(), media_type="text/event-stream")
 
 
 #sync stream implementation
